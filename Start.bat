@@ -24,12 +24,16 @@ if %errorlevel% neq 0 (
 
 :: 2. Check and install required packages
 echo [INFO] Checking and installing required background tools...
-pip install -r requirements.txt
+python -m pip install --upgrade -r requirements.txt
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to install required packages. Make sure you have an internet connection.
     pause
     exit
 )
+
+:: Clear yt-dlp cache to prevent YouTube 403 Forbidden errors
+echo [INFO] Clearing yt-dlp cache...
+python -m yt_dlp --rm-cache-dir >nul 2>&1
 
 echo.
 echo [SUCCESS] Everything is ready! Starting the server...

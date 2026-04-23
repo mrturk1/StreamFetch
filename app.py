@@ -70,10 +70,10 @@ def download():
     try:
         ydl_opts = {
             'outtmpl': f'{DOWNLOAD_FOLDER}/%(title)s.%(ext)s',
-            'format': 'bestvideo+bestaudio/best' if format_type != 'audio' else 'bestaudio/best',
+            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best' if format_type != 'audio' else 'bestaudio/best',
             'merge_output_format': 'mp4' if format_type != 'audio' else None,
             'noplaylist': True,
-            'ffmpeg_location': './ffmpeg.exe',
+            'ffmpeg_location': os.path.abspath('ffmpeg.exe'),
             'progress_hooks': [my_hook],
             'concurrent_fragment_downloads': 8, # Reduced to 8 for stability against Windows file locks
             'file_access_retries': 10,
