@@ -122,6 +122,8 @@ def files():
     try:
         file_list = []
         for f in os.listdir(DOWNLOAD_FOLDER):
+            if f.startswith('.'):
+                continue
             file_path = os.path.join(DOWNLOAD_FOLDER, f)
             if os.path.isfile(file_path):
                 file_list.append({
