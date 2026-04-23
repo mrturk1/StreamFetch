@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamFetch - Video Downloader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=4">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>StreamFetch</h1>
+            <p>Download from YouTube, Vimeo, Twitter, Instagram & more...</p>
+        </header>
+
+        <main>
+            <div class="glass-card input-section">
+                <input type="text" id="url-input" placeholder="Paste the video URL here..." autocomplete="off">
+                <div class="options">
+                    <label class="radio-container">
+                        <input type="radio" name="format" value="video" checked>
+                        <span class="checkmark"></span>
+                        Video (MP4)
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="format" value="audio">
+                        <span class="checkmark"></span>
+                        Audio Only (MP3)
+                    </label>
+                </div>
+                <button id="download-btn" class="primary-btn">
+                    <span class="btn-text">Download</span>
+                    <div class="spinner hidden" id="loading-spinner"></div>
+                </button>
+                
+                <div id="progress-container" class="progress-container hidden">
+                    <div class="progress-info">
+                        <span id="progress-status">Preparing...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <div id="message-box" class="message hidden"></div>
+            </div>
+
+            <div class="glass-card files-section">
+                <h2>Downloaded Files</h2>
+                <div id="file-list" class="file-list">
+                    <!-- Files will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js?v=4"></script>
+</body>
+</html>

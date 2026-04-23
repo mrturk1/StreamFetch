@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Big executables (downloaded automatically via script)
+ffmpeg.exe
+ffprobe.exe
+
+# Temp folders and downloads
+ffmpeg_temp/
+# downloads/*
+# !downloads/.gitkeep
+*.mp4
+*.mp3
+*.webm
+*.mkv
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
