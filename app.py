@@ -68,10 +68,20 @@ def download():
             progress_data[download_id] = {'status': 'processing', 'percent': '100%'}
 
     try:
+        if format_type == 'audio':
+            selected_format = 'bestaudio/best'
+            merge_format = None
+        elif format_type == 'video_only':
+            selected_format = 'bestvideo[ext=mp4][vcodec^=avc1]/bestvideo[vcodec^=avc1]/bestvideo[ext=mp4]/bestvideo'
+            merge_format = 'mp4'
+        else:
+            selected_format = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best'
+            merge_format = 'mp4'
+
         ydl_opts = {
             'outtmpl': f'{DOWNLOAD_FOLDER}/%(title)s.%(ext)s',
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best' if format_type != 'audio' else 'bestaudio/best',
-            'merge_output_format': 'mp4' if format_type != 'audio' else None,
+            'format': selected_format,
+            'merge_output_format': merge_format,
             'noplaylist': True,
             'ffmpeg_location': os.path.abspath('ffmpeg.exe'),
             'progress_hooks': [my_hook],
@@ -97,6 +107,35 @@ def download():
             title = info.get('title', 'video')
             ext = 'mp3' if format_type == 'audio' else 'mp4'
             filename = f"{title}.{ext}"
+
+            if format_type == 'video_only':
+                src_path = ydl.prepare_filename(info)
+                base, _ = os.path.splitext(src_path)
+                actual = None
+                for try_ext in ('.mp4', '.mkv', '.webm'):
+                    candidate = base + try_ext
+                    if os.path.exists(candidate):
+                        actual = candidate
+                        break
+                if actual:
+                    progress_data[download_id] = {'status': 'processing', 'percent': '100%'}
+                    final = base + '.mp4'
+                    tmp = base + '.compat.mp4'
+                    try:
+                        subprocess.run([
+                            os.path.abspath('ffmpeg.exe'), '-y', '-i', actual,
+                            '-c:v', 'libx264', '-profile:v', 'main',
+                            '-preset', 'fast', '-crf', '23',
+                            '-pix_fmt', 'yuv420p', '-an',
+                            tmp
+                        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        if actual != final and os.path.exists(actual):
+                            os.remove(actual)
+                        os.replace(tmp, final)
+                        filename = os.path.basename(final)
+                    except subprocess.CalledProcessError:
+                        if os.path.exists(tmp):
+                            os.remove(tmp)
 
         # Clean up fragments manually
         for root, dirs, files in os.walk(DOWNLOAD_FOLDER):
